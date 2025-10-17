@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias del test
+        run: pip install httpx
+
+      - name: Levantar la orquesta
+        run: docker-compose up --build -d
+
+      - name: Esperar a los servicios
+        run: sleep 30
+
+      - name: Ejecutar las pruebas
+        run: python run_tests.py
