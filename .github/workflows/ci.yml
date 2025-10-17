@@ -24,6 +24,26 @@ jobs:
       - name: Instalar dependencias del test
         run: pip install httpx
 
+      - name: Crear archivo .env para testing
+        run: |
+          cat > .env << EOF
+          ENVIRONMENT=development
+          PROJECT_NAME=ORION
+          LOG_LEVEL=INFO
+          MAIL_SERVER=smtp.gmail.com
+          MAIL_PORT=587
+          MAIL_USERNAME=test@test.com
+          MAIL_PASSWORD=test_password
+          MAIL_FROM=test@test.com
+          MAIL_TO=test@test.com
+          MAIL_SUBJECT_PREFIX=[ORION-TEST]
+          MONGO_HOST=db
+          MONGO_PORT=27017
+          MONGO_USER=test_user
+          MONGO_PASS=test_password
+          MONGO_DB_NAME=orion_test
+          EOF
+
       - name: Levantar la orquesta
         run: docker compose up --build -d
 
