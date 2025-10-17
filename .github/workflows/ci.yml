@@ -25,7 +25,7 @@ jobs:
         run: pip install httpx
 
       - name: Levantar la orquesta
-        run: docker-compose up --build -d
+        run: docker compose up --build -d
 
       - name: Esperar a los servicios
         run: sleep 30
