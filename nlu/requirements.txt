@@ -1,0 +1,24 @@
+# ============================================
+# NLU Service - Dependencies
+# ============================================
+# Python >= 3.8 required
+#
+# Installation:
+#   pip install -r requirements.txt
+# ============================================
+
+# FastAPI - Modern, fast web framework for building APIs
+fastapi==0.104.1
+
+# Uvicorn - Lightning-fast ASGI server
+uvicorn[standard]==0.24.0
+
+# Pydantic - Data validation using Python type annotations
+pydantic==2.4.2
+
+# spaCy - Industrial-strength Natural Language Processing
+spacy==3.7.2
+
+# Spanish language model for spaCy (small version)
+# Pre-trained model with word vectors, POS tags, NER, etc.
+https://github.com/explosion/spacy-models/releases/download/es_core_news_sm-3.7.0/es_core_news_sm-3.7.0-py3-none-any.whl

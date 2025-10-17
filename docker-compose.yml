@@ -1,0 +1,156 @@
+# ============================================
+# ORION Project - Docker Compose
+# ============================================
+# Orchestrates the FastAPI application services
+# ============================================
+
+services:
+  # FastAPI API Gateway Service
+  api:
+    # Build from Dockerfile in current directory
+    build: .
+    
+    # Container name for easy identification
+    container_name: orion_api
+    
+    # Port mapping: host:container
+    # Access the API at http://localhost:8080
+    ports:
+      - "8080:8000"
+    
+    # Volume mounting for hot-reload development
+    # Maps local ./app directory to container's /app directory
+    # Changes in code are immediately reflected without rebuilding
+    volumes:
+      - ./app:/app
+    
+    # Load environment variables from .env file
+    # Create a .env file in the project root for configuration
+    env_file:
+      - .env
+    
+    # Restart policy: always restart the container if it stops
+    restart: unless-stopped
+    
+    # Depends on NLU and CORE services
+    depends_on:
+      - nlu
+      - core
+  
+  # NLU (Natural Language Understanding) Service
+  nlu:
+    # Build from Dockerfile in nlu directory
+    build:
+      context: ./nlu
+      dockerfile: Dockerfile
+    
+    # Container name for easy identification
+    container_name: orion_nlu
+    
+    # Port mapping: host:container
+    # Access the NLU service at http://localhost:8001
+    ports:
+      - "8001:8000"
+    
+    # Volume mounting for hot-reload development
+    volumes:
+      - ./nlu/app:/app
+    
+    # Load environment variables from .env file
+    env_file:
+      - .env
+    
+    # Restart policy: always restart the container if it stops
+    restart: unless-stopped
+  
+  # CORE (Business Logic Orchestrator) Service
+  core:
+    # Build from Dockerfile in core directory
+    build:
+      context: ./core
+      dockerfile: Dockerfile
+    
+    # Container name for easy identification
+    container_name: orion_core
+    
+    # Port mapping: host:container
+    # Access the CORE service at http://localhost:8002
+    ports:
+      - "8002:8000"
+    
+    # Volume mounting for hot-reload development
+    volumes:
+      - ./core/app:/app
+    
+    # Load environment variables from .env file
+    env_file:
+      - .env
+    
+    # Restart policy: always restart the container if it stops
+    restart: unless-stopped
+    
+    # Depends on INTEGRATIONS service
+    depends_on:
+      - integrations
+  
+  # INTEGRATIONS (External API Abstraction) Service
+  integrations:
+    # Build from Dockerfile in integrations directory
+    build:
+      context: ./integrations
+      dockerfile: Dockerfile
+    
+    # Container name for easy identification
+    container_name: orion_integrations
+    
+    # Port mapping: host:container
+    # Access the INTEGRATIONS service at http://localhost:8003
+    ports:
+      - "8003:8000"
+    
+    # Volume mounting for hot-reload development
+    volumes:
+      - ./integrations/app:/app
+    
+    # Load environment variables from .env file
+    env_file:
+      - .env
+    
+    # Restart policy: always restart the container if it stops
+    restart: unless-stopped
+  
+  # MongoDB Database Service
+  db:
+    # Use official MongoDB image
+    image: mongo:6.0
+    
+    # Container name for easy identification
+    container_name: orion_mongodb
+    
+    # Port mapping: host:container
+    # Access MongoDB at mongodb://localhost:27017
+    ports:
+      - "27017:27017"
+    
+    # Environment variables for MongoDB initialization
+    environment:
+      # Root credentials loaded from .env file
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+      # Default database name
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
+    
+    # Persistent volume for database data
+    # CRITICAL: Ensures data survives container restarts
+    volumes:
+      - mongo-data:/data/db
+    
+    # Restart policy: always restart the container if it stops
+    restart: unless-stopped
+
+# Named volumes for persistent data storage
+volumes:
+  # MongoDB data volume
+  # This volume persists all database data across container lifecycle
+  mongo-data:
+    driver: local

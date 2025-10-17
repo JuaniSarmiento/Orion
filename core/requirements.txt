@@ -1,0 +1,23 @@
+# ============================================
+# CORE Service - Dependencies
+# ============================================
+# Python >= 3.8 required
+#
+# Installation:
+#   pip install -r requirements.txt
+# ============================================
+
+# FastAPI - Modern, fast web framework for building APIs
+fastapi==0.104.1
+
+# Uvicorn - Lightning-fast ASGI server
+uvicorn[standard]==0.24.0
+
+# Pydantic - Data validation using Python type annotations
+pydantic==2.4.2
+
+# HTTPX - Modern async HTTP client for microservice communication
+httpx==0.25.1
+
+# Python Multipart - Required for email handling with FastAPI
+python-multipart==0.0.6

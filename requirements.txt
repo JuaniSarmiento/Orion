@@ -1,0 +1,35 @@
+# ============================================
+# ORION Project - Dependencies
+# ============================================
+# Python >= 3.8 required
+#
+# Installation:
+#   pip install -r requirements.txt
+# ============================================
+
+# FastAPI - Modern, fast web framework for building APIs
+fastapi==0.104.1
+
+# Uvicorn - Lightning-fast ASGI server
+# [standard] includes extra dependencies for better performance:
+#   - uvloop: Ultra fast asyncio event loop
+#   - httptools: Fast HTTP parsing
+#   - websockets: WebSocket support
+uvicorn[standard]==0.24.0
+
+# Pydantic - Data validation using Python type annotations
+pydantic==2.4.2
+
+# Python-dotenv - Read key-value pairs from .env file
+python-dotenv==1.0.0
+
+# HTTPX - Modern async HTTP client for microservice communication
+httpx==0.25.1
+
+# PyMongo - Official MongoDB driver for Python
+# Provides synchronous and asynchronous MongoDB operations
+pymongo==4.6.0
+
+# Jinja2 - Template engine for Python
+# Used for rendering HTML templates in the dashboard
+jinja2==3.1.2

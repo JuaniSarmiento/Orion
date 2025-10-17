@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORION - Dashboard de Conversaciones</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card h3 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .stat-card p {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .table-container {
+            padding: 30px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        thead {
+            background: #667eea;
+            color: white;
+        }
+        
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #e0e0e0;
+            transition: background-color 0.2s;
+        }
+        
+        tbody tr:hover {
+            background-color: #f5f7ff;
+        }
+        
+        td {
+            padding: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .timestamp {
+            color: #666;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+        
+        .user-id {
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .channel-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .channel-whatsapp {
+            background: #dcf8c6;
+            color: #075e54;
+        }
+        
+        .intent-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-right: 5px;
+        }
+        
+        .intent-trackear_pedido {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .intent-consultar_stock {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .intent-intencion_desconocida {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .message-text {
+            color: #333;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .status-success {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+        
+        .status-error {
+            color: #c62828;
+            font-weight: 600;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .refresh-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s;
+        }
+        
+        .refresh-button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 ORION Dashboard</h1>
+            <p>Historial de Conversaciones en Tiempo Real</p>
+        </header>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <h3>{{ total_conversations }}</h3>
+                <p>Total Conversaciones</p>
+            </div>
+            <div class="stat-card">
+                <h3>{{ unique_users }}</h3>
+                <p>Usuarios Únicos</p>
+            </div>
+            <div class="stat-card">
+                <h3>{{ recent_count }}</h3>
+                <p>Últimas 24 Horas</p>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <h2 style="margin-bottom: 20px; color: #333;">📋 Historial de Conversaciones</h2>
+            
+            {% if conversations %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Canal</th>
+                        <th>Usuario</th>
+                        <th>Mensaje</th>
+                        <th>Intent</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for conv in conversations %}
+                    <tr>
+                        <td class="timestamp">{{ conv.timestamp }}</td>
+                        <td>
+                            <span class="channel-badge channel-{{ conv.channel }}">
+                                {{ conv.channel }}
+                            </span>
+                        </td>
+                        <td class="user-id">{{ conv.user_id }}</td>
+                        <td>
+                            <div class="message-text" title="{{ conv.message.text }}">
+                                {{ conv.message.text }}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="intent-badge intent-{{ conv.nlu_response.intent }}">
+                                {{ conv.nlu_response.intent }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="status-{{ conv.core_response.status }}">
+                                {{ conv.core_response.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <h3>📭 No hay conversaciones todavía</h3>
+                <p>Las conversaciones aparecerán aquí cuando los usuarios envíen mensajes.</p>
+            </div>
+            {% endif %}
+        </div>
+        
+        <footer>
+            <p>🤖 ORION - Sistema de Conversación Inteligente | Powered by FastAPI + MongoDB</p>
+        </footer>
+    </div>
+    
+    <button class="refresh-button" onclick="location.reload()">🔄 Actualizar</button>
+</body>
+</html>
